@@ -3,7 +3,7 @@ package main
 import (
 	"log/slog"
 	"net/http"
-	"pizza-tracker-go/internal/models"
+	"github.com/Brabyns/pizza-shop-order/internal/models"
 
 	"github.com/gin-gonic/gin"
 )

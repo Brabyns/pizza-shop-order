@@ -1,10 +1,10 @@
 package main
 
-import{
+import (
 	"os"
 	"html/template"
 	"github.com/gin-gonic/gin"
-}
+)
 
 
 type Config struct {

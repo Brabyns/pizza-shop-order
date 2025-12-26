@@ -1,7 +1,7 @@
 package main
 
 import (
-	"pizza-tracker-go/internal/models"
+	"github.com/Brabyns/pizza-shop-order/internal/models"
 	"slices"
 	"github.com/gin-gonic/gin/binding"
 
@@ -9,9 +9,9 @@ import (
 )
 
 func RegisterCustomValidators() {
-	if v, ok := binding.validator.Engine().(*validator.Validate); ok {
-		v.RegisterValidattion("valid_pizza_type", createSliceValidator(models.PizzaTypes))
-		v.RegisterValidattion("valid_pizza_size", createSliceValidator(models.PizzaSizes))
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("valid_pizza_type", createSliceValidator(models.PizzaTypes))
+		v.RegisterValidation("valid_pizza_size", createSliceValidator(models.PizzaSizes))
 	}
 } 
 

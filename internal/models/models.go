@@ -3,22 +3,22 @@ package models
 import (
 	"fmt"
 
-	"gorm.io/driver/sqlite"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 )
 
 type DBModel struct {
 	Order OrderModel
-	DB    *gorm.DB
+	
 	
 }
 
 func InitDB(dataSourceName string) (*DBModel, error) {
 	db, err := gorm.Open(sqlite.Open(dataSourceName), &gorm.Config{})
-
 	if err != nil {
-		return nil, fmt.Errorf("Failed to migrate database: %v", err)
+		return nil, fmt.Errorf("failed to open database: %w", err)
 	}
+
 
 	err  = db.AutoMigrate(&Order{}, &OrderItem{})
 	if err != nil {
@@ -26,7 +26,7 @@ func InitDB(dataSourceName string) (*DBModel, error) {
 	}
 
 	dbModel := &DBModel{
-		DB:    db,
+		
 		Order: OrderModel{DB: db},
 		
 	}

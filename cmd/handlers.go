@@ -1,8 +1,7 @@
 package main
 
 import (
-	"pizza-tracker-go/internal"
-	 "pizza-tracker-go/internal/models"
+	 "github.com/Brabyns/pizza-shop-order/internal/models"
 )
 
 type Handler struct {
