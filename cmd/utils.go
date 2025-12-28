@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
 	"html/template"
 	"github.com/gin-gonic/gin"
@@ -30,6 +31,12 @@ func getEnv(key, defaultValue string) string{
 func loadTemplates(router *gin.Engine) error{
 	functions := template.FuncMap{
 		"add": func(a, b int) int { return a + b },
+
+		// ✅ JSON helper for templates
+		"json": func(v any) template.JS {
+			b, _ := json.Marshal(v)
+			return template.JS(b)
+		},
 	}
 
 	tmpl, err := template.New("").Funcs(functions).ParseGlob("templates/*.tmpl")
