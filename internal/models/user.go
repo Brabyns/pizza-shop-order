@@ -8,7 +8,7 @@ import (
 )
 
 type User struct {
-	ID       uint   `gorm:"primaryKey`
+	ID       uint   `gorm:"primaryKey"`
 	Username string `gorm:"uniqueIndex;not null"`
 	Password string `gorm:"not null"`
 }
@@ -17,19 +17,24 @@ type UserModel struct {
 	DB *gorm.DB
 }
 
+var ErrInvalidCredentials = errors.New("invalid credentials")
+
 func (u *UserModel) AuthenticateUser(username, password string) (*User, error) {
 	var user User
 
-	if err := u.DB.Where("username = ?", username).First(&user).Error; err != nil {
+	err := u.DB.Where("username = ?", username).First(&user).Error
+	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("invalid credentials")
+			return nil, ErrInvalidCredentials
 		}
-
 		return nil, err
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-		return nil, errors.New("invalid credentials")
+	if err := bcrypt.CompareHashAndPassword(
+		[]byte(user.Password),
+		[]byte(password),
+	); err != nil {
+		return nil, ErrInvalidCredentials
 	}
 
 	return &user, nil

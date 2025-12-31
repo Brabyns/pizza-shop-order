@@ -61,7 +61,7 @@ func setupSessionStore(db *gorm.DB, secretKey []byte) sessions.Store{
 		MaxAge: 86400,
 		HttpOnly: true,
 		Secure: true,
-		SameSitr: 3,
+		SameSite: 3,
 	})
 
 	return store
