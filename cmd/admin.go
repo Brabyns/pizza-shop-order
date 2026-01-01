@@ -14,6 +14,8 @@ type LoginData struct {
 }
 
 type AdminDashaboardData struct {
+	Orders []models.Order
+	Statuses []string
 	Username string
 }
 
@@ -64,6 +66,11 @@ func (h *Handler) HandleLogout(c *gin.Context) {
 
 
 func (h *Handler) ServeAdminDashboard(c *gin.Context) {
+	orders, err := h.orders.GetAllOrders()
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Error fetchinh orders")
+		return
+	}
 	username := GetSessionString(c, "username")
 
 	if username == "" {
@@ -72,6 +79,31 @@ func (h *Handler) ServeAdminDashboard(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "admin.tmpl", AdminDashaboardData{
+		Orders: orders,
+		Statuses: models.OrderStatuses,
 		Username: username,
 	})
+}
+
+func (h *Handler) HandleOrderPut(c *gin.Context){
+	orderId := c.Param("id")
+	newStatus := c.PostForm("status")
+
+	if err := h.orders.UpdateOrderStatus(orderId, newStatus); err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.Redirect(http.StatusSeeOther, "/admin")
+}
+
+func (h *Handler) HandleOrderDelete(c *gin.Context){
+	orderID := c.Param("id")
+
+	if err := h.orders.DeleteOrder(orderID); err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.Redirect(http.StatusSeeOther, "/admin")
 }
