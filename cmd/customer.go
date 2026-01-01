@@ -79,6 +79,7 @@ for i := 0; i < count; i++ {
 	}
 
 	slog.Info("Order Created", "orderId", order.ID, "customer", order.CustomerName)
+	h.notificationManager.Notify("admin:new_orders", "new_order")
 
 	c.Redirect(http.StatusSeeOther, "/customer/"+order.ID)
 }
